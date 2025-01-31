@@ -1,0 +1,20 @@
+<div class="time-slot {{ this.slotColor }}">
+    <div class="slot-header">
+        <span class="slot-time">{{ this.time }}</span>
+        <span class="slot-type">{{ this.type }}</span>
+    </div>
+    <div class="slot-capacity">Places: {{ this.slotCapacity }}</div>
+    <div class="attendance-toggle">
+        {% if this.full %}
+            <button class="toggle-btn disabled" disabled>Créneau complet</button>
+        {% else %}
+            <button class="toggle-btn">Je viens</button>
+            <button class="toggle-btn">Je ne viens pas</button>
+        {% endif %}
+    </div>
+    <div class="participants-list">
+        {% for participant in this.slots %}
+            <div class="participant">{{ participant.name }}</div>
+        {% endfor %}
+    </div>
+</div>

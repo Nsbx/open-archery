@@ -1,0 +1,21 @@
+<div class="container">
+    <twig:Card>
+        <div class="planning-body">
+            <twig:Planning:Day date="{{ date('2025-02-04') }}">
+                <twig:Planning:Slot type="Session Libre" time="18h30 - 19h30" />
+                <twig:Planning:Slot type="Session Libre" time="19h30 - 22h00" />
+            </twig:Planning:Day>
+            <twig:Planning:Day date="{{ date('2025-02-05') }}">
+                <twig:Planning:Slot type="Cours Débutant" time="18h30 - 19h30" />
+                <twig:Planning:Slot type="Cours Confirmé" time="19h30 - 22h00" />
+            </twig:Planning:Day>
+            <twig:Planning:Day date="{{ date('2025-02-07') }}">
+                <twig:Planning:Slot type="Session Libre" time="18h00 - 19h30" />
+                <twig:Planning:Slot type="Session Libre" time="19h30 - 22h00" />
+            </twig:Planning:Day>
+        </div>
+        <div class="planning-footer">
+            <twig:Planning:Legend />
+        </div>
+    </twig:Card>
+</div>

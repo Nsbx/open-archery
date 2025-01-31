@@ -1,0 +1,8 @@
+<div class="day-card">
+    <h2>{{ this.date|format_datetime(locale='fr', pattern='EEEE dd MMMM') }}</h2>
+
+    {% block content %}
+        <twig:Planning:Slot type="Session Libre" time="18h30 - 19h30" />
+        <twig:Planning:Slot type="Session Libre" time="19h30 - 22h00" />
+    {% endblock %}
+</div>
