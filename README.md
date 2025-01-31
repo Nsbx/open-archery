@@ -1,6 +1,5 @@
 # Open-Archery
-
-Open-Archery est un projet open source visant à aider les clubs de tir à l'arc à gérer leur planning et, à terme, diverses autres fonctionnalités comme l'ajout de sessions de tir personnalisées.
+Open-Archery est un projet open source visant à aider les clubs de tir à l'arc (Dans un premier temps mon propre club) à gérer leur planning et, à terme, diverses autres fonctionnalités comme l'ajout de sessions de tir personnalisées.
 
 ## Objectifs du projet
 - Proof of Concept (POC) : Développement initial centré sur la gestion du planning.
@@ -11,9 +10,9 @@ Open-Archery est un projet open source visant à aider les clubs de tir à l'arc
 ## Fonctionnalités (POC)
 - Gestion du planning des sessions de tir.
 - Interface intuitive pour visualiser les disponibilités.
+- Gestion des inscriptions aux sessions.
 
 ## Fonctionnalités à venir
-- Gestion des inscriptions aux sessions.
 - Ajout et personnalisation de sessions de tir.
 - Administration et gestion des membres du club.
 - Ajout d'un flux de calendrier ICS
