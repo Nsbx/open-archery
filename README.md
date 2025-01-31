@@ -17,3 +17,17 @@ Open-Archery est un projet open source visant à aider les clubs de tir à l'arc
 - Ajout et personnalisation de sessions de tir.
 - Administration et gestion des membres du club.
 - Historique des sessions et statistiques.
+
+## Installer le projet
+### Pré-requis
+- Git
+- PHP 8.2
+- Composer 2.8
+- Symfony CLI 5.10
+
+### Commandes
+> composer install
+
+> symfony server:start
+
+Ne pas oublier de modifier la variable d'environnement lié à la base de données
