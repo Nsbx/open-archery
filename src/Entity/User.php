@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
@@ -14,13 +17,13 @@ class User
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::GUID)]
-    private ?string $uuid = null;
+    #[ORM\Column(length: 255)]
+    private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $pseudo = null;
+    private ?string $lastName = null;
 
-    #[ORM\Column(type: Types::GUID)]
+    #[ORM\Column(type: Types::GUID, nullable: true)]
     private ?string $passkey = null;
 
     #[ORM\Column]
@@ -38,31 +41,43 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    /**
+     * @var Collection<int, PlanningSlot>
+     */
+    #[ORM\ManyToMany(targetEntity: PlanningSlot::class, mappedBy: 'participants')]
+    private Collection $planningSlots;
+
+    public function __construct()
+    {
+        $this->planningSlots = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUuid(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->uuid;
+        return $this->firstName;
     }
 
-    public function setUuid(string $uuid): static
+    public function setFirstName(string $firstName): static
     {
-        $this->uuid = $uuid;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
-    public function getPseudo(): ?string
+    public function getLastName(): ?string
     {
-        return $this->pseudo;
+        return $this->lastName;
     }
 
-    public function setPseudo(string $pseudo): static
+    public function setLastName(string $lastName): static
     {
-        $this->pseudo = $pseudo;
+        // Stores only the first letter of the last name for GDPR compliance.
+        $this->lastName = mb_substr($lastName, 0, 1);
 
         return $this;
     }
@@ -72,11 +87,14 @@ class User
         return $this->passkey;
     }
 
-    public function setPasskey(string $passkey): static
+    public function generatePasskey(): void
     {
-        $this->passkey = $passkey;
+        $this->passkey = Uuid::v4();
+    }
 
-        return $this;
+    public function clearPasskey(): void
+    {
+        $this->passkey = null;
     }
 
     public function isAdmin(): ?bool
@@ -137,5 +155,37 @@ class User
         $this->email = $email;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, PlanningSlot>
+     */
+    public function getPlanningSlots(): Collection
+    {
+        return $this->planningSlots;
+    }
+
+    public function addPlanningSlot(PlanningSlot $planningSlot): static
+    {
+        if (!$this->planningSlots->contains($planningSlot)) {
+            $this->planningSlots->add($planningSlot);
+            $planningSlot->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanningSlot(PlanningSlot $planningSlot): static
+    {
+        if ($this->planningSlots->removeElement($planningSlot)) {
+            $planningSlot->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return sprintf('%s %s.', $this->firstName, $this->lastName);
     }
 }

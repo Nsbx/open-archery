@@ -1,18 +1,22 @@
 <div class="container">
+    {% set slotsGroupedByDay = this.slotsGroupedByDay %}
     <twig:Card>
         <div class="planning-body">
-            <twig:Planning:Day date="{{ date('2025-02-04') }}">
-                <twig:Planning:Slot type="Session Libre" time="18h30 - 19h30" />
-                <twig:Planning:Slot type="Session Libre" time="19h30 - 22h00" />
-            </twig:Planning:Day>
-            <twig:Planning:Day date="{{ date('2025-02-05') }}">
-                <twig:Planning:Slot type="Cours Débutant" time="18h30 - 19h30" />
-                <twig:Planning:Slot type="Cours Confirmé" time="19h30 - 22h00" />
-            </twig:Planning:Day>
-            <twig:Planning:Day date="{{ date('2025-02-07') }}">
-                <twig:Planning:Slot type="Session Libre" time="18h00 - 19h30" />
-                <twig:Planning:Slot type="Session Libre" time="19h30 - 22h00" />
-            </twig:Planning:Day>
+            {% for day, slots in slotsGroupedByDay %}
+                <twig:Planning:Day date="{{ date(day) }}">
+                    {% for slot in slots %}
+                        {% set startTime = slot.startTime|date('H:i') %}
+                        {% set endTime = slot.endTime|date('H:i') %}
+                        <twig:Planning:Slot
+                            isOpen="{{ slot.isOpen }}"
+                            type="{{ slot.type.value }}"
+                            time="{{ startTime }} - {{ endTime}}"
+                            participants="{{ slot.participants }}"
+                            maxCapacity="{{ slot.maxCapacity }}"
+                        />
+                    {% endfor %}
+                </twig:Planning:Day>
+            {% endfor %}
         </div>
         <div class="planning-footer">
             <twig:Planning:Legend />

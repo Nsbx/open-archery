@@ -86,7 +86,6 @@ body {
 
 .planning-body {
     display: flex;
-    align-items: center;
     justify-content: center;
     gap: 20px;
     margin-bottom: 20px;
@@ -128,7 +127,7 @@ body {
 
 .day-card h2 {
     margin-bottom: 10px;
-    color: var(--slot-special);
+    text-transform: capitalize;
 }
 
 .slot-header {
@@ -167,6 +166,7 @@ body {
     font-size: 0.9em;
     transition: background-color 0.2s;
     color: white;
+    background-color: var(--bg-secondary);
 }
 
 .toggle-btn.present {

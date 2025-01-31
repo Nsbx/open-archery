@@ -5,7 +5,9 @@
     </div>
     <div class="slot-capacity">Places: {{ this.slotCapacity }}</div>
     <div class="attendance-toggle">
-        {% if this.full %}
+        {% if this.isOpen == false %}
+            <button class="toggle-btn disabled" disabled>Inscription fermé</button>
+        {% elseif this.full %}
             <button class="toggle-btn disabled" disabled>Créneau complet</button>
         {% else %}
             <button class="toggle-btn">Je viens</button>
@@ -13,8 +15,9 @@
         {% endif %}
     </div>
     <div class="participants-list">
-        {% for participant in this.slots %}
-            <div class="participant">{{ participant.name }}</div>
+        {% for participant in this.participants %}
+            {# @var participant App\Entity\User #}
+            <div class="participant">{{ participant.nickname }}</div>
         {% endfor %}
     </div>
 </div>
