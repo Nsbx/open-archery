@@ -1,0 +1,9 @@
+{# templates/security/request_login_link.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form action="{{ path('app_login') }}" method="POST">
+        <input type="email" name="email">
+        <button type="submit">Send Login Link</button>
+    </form>
+{% endblock %}

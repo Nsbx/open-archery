@@ -14,6 +14,6 @@ final class Planning
 
     public function getSlotsGroupedByDay(): array
     {
-        return $this->slotRepository->findWeekSlots(new \DateTime('next week'));
+        return $this->slotRepository->findWeekSlots();
     }
 }

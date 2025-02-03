@@ -5,29 +5,32 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_NICKNAME', fields: ['nickname'])]
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $firstName = null;
+    #[ORM\Column(length: 180)]
+    private ?string $nickname = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $lastName = null;
-
-    #[ORM\Column(type: Types::GUID, nullable: true)]
-    private ?string $passkey = null;
-
+    /**
+     * @var list<string> The user roles
+     */
     #[ORM\Column]
-    private ?bool $isAdmin = null;
+    private array $roles = [];
+
+    #[ORM\Column(length: 255)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
     private ?string $level = null;
@@ -57,54 +60,93 @@ class User
         return $this->id;
     }
 
-    public function getFirstName(): ?string
+    public function getNickname(): ?string
     {
-        return $this->firstName;
+        return $this->nickname;
     }
 
-    public function setFirstName(string $firstName): static
+    public function updateNickname(): static
     {
-        $this->firstName = $firstName;
+        $this->nickname = sprintf('%s %s', $this->firstname, $this->lastname);
 
         return $this;
     }
 
-    public function getLastName(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->lastName;
+        return (string) $this->nickname;
     }
 
-    public function setLastName(string $lastName): static
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
     {
-        // Stores only the first letter of the last name for GDPR compliance.
-        $this->lastName = mb_substr($lastName, 0, 1);
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getPasskey(): ?string
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
     {
-        return $this->passkey;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
-    public function generatePasskey(): void
+    public function getFirstname(): ?string
     {
-        $this->passkey = Uuid::v4();
+        return $this->firstname;
     }
 
-    public function clearPasskey(): void
+    public function setFirstname(string $firstname): static
     {
-        $this->passkey = null;
+        $this->firstname = $firstname;
+
+        $this->updateNickname();
+
+        return $this;
     }
 
-    public function isAdmin(): ?bool
+    public function getLastname(): ?string
     {
-        return $this->isAdmin;
+        return $this->lastname;
     }
 
-    public function setIsAdmin(bool $isAdmin): static
+    public function setLastname(string $lastname): static
     {
-        $this->isAdmin = $isAdmin;
+        $lastname = trim(preg_replace('/\s+/', ' ', $lastname));
+
+        $nameParts = explode(' ', $lastname);
+
+        $initials = array_map(static function($part) {
+            return mb_strtoupper(mb_substr($part, 0, 1));
+        }, $nameParts);
+
+        $this->lastname = implode('.', $initials);
+
+        $this->updateNickname();
 
         return $this;
     }
@@ -182,10 +224,5 @@ class User
         }
 
         return $this;
-    }
-
-    public function getNickname(): ?string
-    {
-        return sprintf('%s %s.', $this->firstName, $this->lastName);
     }
 }
