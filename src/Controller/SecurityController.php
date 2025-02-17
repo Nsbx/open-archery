@@ -27,7 +27,7 @@ final class SecurityController extends AbstractController
             $user  = $userRepository->findOneBy(['email' => $email]);
 
             if ($user === null) {
-                $this->addFlash('danger', 'This email does not exist ');
+                $this->addFlash('error', 'Cette adresse email n\'existe pas.');
                 return $this->redirectToRoute('app_login');
             }
 
@@ -42,23 +42,16 @@ final class SecurityController extends AbstractController
 
             $notifier->send($notification, $recipient);
 
-            return $this->render('security/login_link_sent.html.twig');
+            $this->addFlash('success', 'Lien magique envoyé, vous pouvez fermer la page et ouvrir le lien dans votre mail.');
+            return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/request_login_link.html.twig');
+        return $this->render('security/login.html.twig');
     }
 
     #[Route('/login_check', name: 'app_login_check')]
-    public function check(Request $request): Response
+    public function check(Request $request): never
     {
-        $expires = $request->query->get('expires');
-        $username = $request->query->get('user');
-        $hash = $request->query->get('hash');
-
-        return $this->render('security/process_login_link.html.twig', [
-            'expires' => $expires,
-            'user' => $username,
-            'hash' => $hash,
-        ]);
+        throw new \LogicException('This code should never be reached');
     }
 }

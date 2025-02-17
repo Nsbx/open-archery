@@ -27,32 +27,34 @@ class User implements UserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $lastname = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $level = null;
-
-    #[ORM\Column]
-    private ?int $experienceYears = null;
-
-    #[ORM\Column]
-    private ?int $registrationYear = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[ORM\Column]
+    private ?int $level = null;
+
+    #[ORM\Column]
+    private ?bool $hasEquipment = null;
+
     /**
-     * @var Collection<int, PlanningSlot>
+     * @var Collection<int, RecurringSlot>
      */
-    #[ORM\ManyToMany(targetEntity: PlanningSlot::class, mappedBy: 'participants')]
-    private Collection $planningSlots;
+    #[ORM\ManyToMany(targetEntity: RecurringSlot::class, mappedBy: 'permanentRegistrations')]
+    private Collection $recurringSlots;
+
+    /**
+     * @var Collection<int, SlotInstance>
+     */
+    #[ORM\ManyToMany(targetEntity: SlotInstance::class, mappedBy: 'registrations')]
+    private Collection $slotInstances;
+
+    // Not used but needed for passwordless system
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $password = null;
 
     public function __construct()
     {
-        $this->planningSlots = new ArrayCollection();
+        $this->recurringSlots = new ArrayCollection();
+        $this->slotInstances = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,13 +65,6 @@ class User implements UserInterface
     public function getNickname(): ?string
     {
         return $this->nickname;
-    }
-
-    public function updateNickname(): static
-    {
-        $this->nickname = sprintf('%s %s', $this->firstname, $this->lastname);
-
-        return $this;
     }
 
     /**
@@ -115,78 +110,6 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): static
-    {
-        $this->firstname = $firstname;
-
-        $this->updateNickname();
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): static
-    {
-        $lastname = trim(preg_replace('/\s+/', ' ', $lastname));
-
-        $nameParts = explode(' ', $lastname);
-
-        $initials = array_map(static function($part) {
-            return mb_strtoupper(mb_substr($part, 0, 1));
-        }, $nameParts);
-
-        $this->lastname = implode('.', $initials);
-
-        $this->updateNickname();
-
-        return $this;
-    }
-
-    public function getLevel(): ?string
-    {
-        return $this->level;
-    }
-
-    public function setLevel(string $level): static
-    {
-        $this->level = $level;
-
-        return $this;
-    }
-
-    public function getExperienceYears(): ?int
-    {
-        return $this->experienceYears;
-    }
-
-    public function setExperienceYears(int $experienceYears): static
-    {
-        $this->experienceYears = $experienceYears;
-
-        return $this;
-    }
-
-    public function getRegistrationYear(): ?int
-    {
-        return $this->registrationYear;
-    }
-
-    public function setRegistrationYear(int $registrationYear): static
-    {
-        $this->registrationYear = $registrationYear;
-
-        return $this;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
@@ -199,30 +122,108 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getLevel(): ?int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(int $level): static
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    public function hasEquipment(): ?bool
+    {
+        return $this->hasEquipment;
+    }
+
+    public function setHasEquipment(bool $hasEquipment): static
+    {
+        $this->hasEquipment = $hasEquipment;
+
+        return $this;
+    }
+
     /**
-     * @return Collection<int, PlanningSlot>
+     * @return Collection<int, RecurringSlot>
      */
-    public function getPlanningSlots(): Collection
+    public function getRecurringSlots(): Collection
     {
-        return $this->planningSlots;
+        return $this->recurringSlots;
     }
 
-    public function addPlanningSlot(PlanningSlot $planningSlot): static
+    public function addRecurringSlot(RecurringSlot $recurringSlot): static
     {
-        if (!$this->planningSlots->contains($planningSlot)) {
-            $this->planningSlots->add($planningSlot);
-            $planningSlot->addParticipant($this);
+        if (!$this->recurringSlots->contains($recurringSlot)) {
+            $this->recurringSlots->add($recurringSlot);
+            $recurringSlot->addPermanentRegistration($this);
         }
 
         return $this;
     }
 
-    public function removePlanningSlot(PlanningSlot $planningSlot): static
+    public function removeRecurringSlot(RecurringSlot $recurringSlot): static
     {
-        if ($this->planningSlots->removeElement($planningSlot)) {
-            $planningSlot->removeParticipant($this);
+        if ($this->recurringSlots->removeElement($recurringSlot)) {
+            $recurringSlot->removePermanentRegistration($this);
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, SlotInstance>
+     */
+    public function getSlotInstances(): Collection
+    {
+        return $this->slotInstances;
+    }
+
+    public function addSlotInstance(SlotInstance $slotInstance): static
+    {
+        if (!$this->slotInstances->contains($slotInstance)) {
+            $this->slotInstances->add($slotInstance);
+            $slotInstance->addRegistration($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSlotInstance(SlotInstance $slotInstance): static
+    {
+        if ($this->slotInstances->removeElement($slotInstance)) {
+            $slotInstance->removeRegistration($this);
+        }
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getInitials(): string
+    {
+        $initials = '';
+        $nameParts = explode(' ', $this->nickname);
+        foreach ($nameParts as $namePart) {
+            $initials .= $namePart[0];
+        }
+        return $initials;
+    }
+
+    public function __toString(): string
+    {
+        return $this->nickname;
     }
 }

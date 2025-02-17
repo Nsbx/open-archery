@@ -1,221 +1,149 @@
-:root {
-    --bg-primary: #f0f2f5;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #e0e0e0;
-    --text-primary: #000000;
-    --text-secondary: #666666;
-    --border-color: #e0e0e0;
-    --slot-hover: #f8f9fa;
-    --card-shadow: rgba(0, 0, 0, 0.1);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-    --slot-available: #4caf50;
-    --slot-special: #2196f3;
-    --slot-full: #f44336;
-
-    --participant-bg: #e3f2fd;
-    --participant-text: #1976d2;
+.bg-primary {
+    @apply bg-zinc-50 dark:bg-zinc-900;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-primary: #121212;
-        --bg-secondary: #1e1e1e;
-        --bg-tertiary: #1e1e1e;
-        --text-primary: #ffffff;
-        --text-secondary: #a0a0a0;
-        --border-color: #2d2d2d;
-        --slot-hover: #2d2d2d;
-        --card-shadow: rgba(0, 0, 0, 0.3);
-
-        --slot-available: #66bb6a;
-        --slot-special: #42a5f5;
-        --slot-full: #ef5350;
-
-        --participant-bg: #1e3a5f;
-        --participant-text: #90caf9;
-    }
+.bg-secondary {
+    @apply bg-zinc-100 dark:bg-zinc-800;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+.bg-tertiary {
+    @apply bg-zinc-200 dark:bg-zinc-700;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    padding: 20px;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+.card-primary {
+    @apply
+        px-6 py-8
+        mb-4
+        bg-secondary
+        rounded-lg
+        ring-1
+        ring-slate-900/5
+        shadow
+    ;
 }
 
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+.badge {
+    @apply
+        px-2 py-1
+        inline
+        text-xs
+        rounded-lg
+        text-zinc-600 dark:text-zinc-300
+        bg-zinc-300 dark:bg-zinc-600
+        border border-zinc-400 dark:border-zinc-500
+    ;
 }
 
-.card {
-    width: 100%;
-    background: var(--bg-secondary);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px var(--card-shadow);
+.badge.neutral {
+    @apply
+    text-neutral-600 dark:text-neutral-300
+    bg-neutral-300 dark:bg-neutral-600
+    border-neutral-400 dark:border-neutral-500
+    ;
 }
 
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+.badge.cyan {
+    @apply
+    text-cyan-600 dark:text-cyan-300
+    bg-cyan-300 dark:bg-cyan-600
+    border-cyan-400 dark:border-cyan-500
+    ;
 }
 
-.user-avatar {
-    width: 50px;
-    min-width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--slot-special);
-    color: var(--bg-secondary);;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
+.badge.blue {
+    @apply
+        text-blue-600 dark:text-blue-300
+        bg-blue-300 dark:bg-blue-600
+        border-blue-400 dark:border-blue-500
+    ;
 }
 
-.planning-body {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
+h1 {
+    @apply
+        text-xl
+        font-bold
+        text-black dark:text-white
+    ;
 }
 
-@media (max-width: 1000px) {
-    .planning-body {
-        flex-direction: column;
-    }
+h2 {
+    @apply
+        text-xl
+        font-bold
+        text-black dark:text-white
+    ;
 }
 
-.time-slot {
-    background: var(--slot-hover);
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border-color);
+input {
+    @apply
+        p-2
+        w-full
+        rounded-md
+        border
+    ;
 }
 
-.slot-special {
-    border-left: 4px solid var(--slot-special);
+.avatar {
+    @apply
+        w-[50px]
+        h-[50px]
+        min-w-[50px]
+        bg-sky-500
+        rounded-full
+        flex items-center
+        justify-center
+        text-xl
+        text-black dark:text-white
+    ;
 }
 
-.slot-available {
-    border-left: 4px solid var(--slot-available);;
+.button {
+    @apply
+        px-3
+        py-1.5
+        rounded
+        text-sm
+        cursor-pointer
+        text-zinc-900 dark:text-zinc-50
+        bg-zinc-300 dark:bg-zinc-600
+        hover:bg-zinc-400 dark:hover:bg-zinc-500
+    ;
 }
 
-.slot-full {
-    border-left: 4px solid var(--slot-full);;
+.button.disabled {
+    @apply
+        bg-zinc-400 dark:bg-zinc-500
+        text-zinc-600 dark:text-zinc-300
+        cursor-not-allowed
+    ;
 }
 
-.day-card {
-    width: 100%;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-secondary);
+.alert {
+    @apply
+        rounded-md
+        p-4
+        mb-4
+        border
+    ;
 }
 
-.day-card h2 {
-    margin-bottom: 10px;
-    text-transform: capitalize;
+.alert.success {
+    @apply
+        bg-green-200 dark:bg-green-700
+        text-green-900 dark:text-green-50
+        border-green-200 dark:border-green-700
+    ;
 }
 
-.slot-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+.alert.error {
+    @apply
+    bg-red-200 dark:bg-red-700
+    text-red-900 dark:text-red-50
+    border-red-200 dark:border-red-700
+    ;
 }
 
-.slot-time {
-    font-weight: bold;
-}
-
-.slot-type {
-    font-size: 0.9em;
-    color: var(--text-secondary);
-}
-
-.slot-capacity {
-    font-size: 0.9em;
-    color: var(--text-secondary);
-    margin-top: 5px;
-}
-
-.attendance-toggle {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.toggle-btn {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.2s;
-    color: white;
-    background-color: var(--bg-secondary);
-}
-
-.toggle-btn.present {
-    background-color: var(--slot-available);
-}
-
-.toggle-btn.absent {
-    background-color: var(--slot-full);
-}
-
-.toggle-btn.disabled {
-    background-color: var(--bg-tertiary);;
-    color: var(--text-secondary);
-    cursor: not-allowed;
-}
-
-.participants-list {
-    margin-top: 10px;
-    font-size: 0.9em;
-}
-
-.participant {
-    display: inline-block;
-    background: var(--participant-bg);
-    color: var(--participant-text);
-    padding: 4px 8px;
-    border-radius: 4px;
-    margin: 2px;
-}
-
-.legend {
-    margin-top: 20px;
-    padding: 15px;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    display: flex;
-    gap: 20px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9em;
-    color: var(--text-secondary);
-}
-
-.legend-color {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-}

@@ -1,25 +1,41 @@
-<div class="container">
-    {% set slotsGroupedByDay = this.slotsGroupedByDay %}
-    <twig:Card>
-        <div class="planning-body">
+{% set slotsGroupedByDay = this.slotsGroupedByDay %}
+
+<div class="container" {{ attributes }}>
+    <div class="card-primary">
+        <div class="w-full flex justify-center mb-8">
+            <div class="flex content-center gap-5">
+                <a class="button font-bold" href="{{ path('app_planning', {'weekNumber': weekNumber - 1}) }}"><</a>
+                <span class="text-xl text-black dark:text-white">Semaine {{ weekNumber }}</span>
+                <a class="button font-bold" href="{{ path('app_planning', {'weekNumber': weekNumber + 1}) }}">></a>
+            </div>
+        </div>
+        <div class="flex content-center gap-5 mb-5 flex-col xl:flex-row">
             {% for day, slots in slotsGroupedByDay %}
                 <twig:Planning:Day date="{{ date(day) }}">
                     {% for slot in slots %}
-                        {% set startTime = slot.startTime|date('H:i') %}
-                        {% set endTime = slot.endTime|date('H:i') %}
+                        {# @var slot \App\Entity\SlotInstance #}
+                        {% set startTime = slot.startDate|date('H:i') %}
+                        {% set endTime = slot.endDate|date('H:i') %}
                         <twig:Planning:Slot
-                            isOpen="{{ slot.isOpen }}"
-                            type="{{ slot.type.value }}"
+                            id="{{ slot.id }}"
+                            type="{{ slot.type }}"
                             time="{{ startTime }} - {{ endTime}}"
-                            participants="{{ slot.participants }}"
+                            participants="{{ slot.registrations }}"
                             maxCapacity="{{ slot.maxCapacity }}"
+                            allowRegistration="{{ slot.allowRegistration }}"
+                            requiresEquipment="{{ slot.requiresEquipment }}"
+                            minLevel="{{ slot.minLevel }}"
+                            maxLevel="{{ slot.maxLevel }}"
+                            isCancelled="{{ slot.isCancelled }}"
+                            cancelReason="{{ slot.cancelReason }}"
+                            weekNumber="{{ weekNumber }}"
                         />
                     {% endfor %}
                 </twig:Planning:Day>
             {% endfor %}
         </div>
-        <div class="planning-footer">
+        <div>
             <twig:Planning:Legend />
         </div>
-    </twig:Card>
+    </div>
 </div>

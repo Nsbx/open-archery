@@ -1,23 +1,87 @@
-<div class="time-slot {{ this.slotColor }}">
-    <div class="slot-header">
-        <span class="slot-time">{{ this.time }}</span>
-        <span class="slot-type">{{ this.type }}</span>
+{% set slot = cva({
+    base: 'bg-tertiary p-4 mb-2.5 rounded-md border-l-4',
+    variants: {
+        color: {
+            special: 'border-blue-500',
+            available: 'border-green-500',
+            full: 'border-yellow-500',
+            cancelled: 'border-red-500',
+        }
+    }
+}) %}
+
+<div class="{{ slot.apply({color: this.slotStatus}) }}" {{ attributes }}>
+    <div class="flex justify-between items-center mb-2">
+        <span class="font-bold text-black dark:text-white">
+            {% if this.isCancelled %}
+                <s>{{ this.time }}</s>
+            {% else %}
+                {{ this.time }}
+            {% endif %}
+        </span>
+        <div class="flex items-center gap-1">
+            <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ this.type }} (Niveau {{ this.levelRange }})</span>
+            {% if this.requiresEquipment %}
+                <span class="w-4 text-zinc-600 dark:text-zinc-400">{{ ux_icon('tabler:bow') }}</span>
+            {% endif %}
+        </div>
     </div>
-    <div class="slot-capacity">Places: {{ this.slotCapacity }}</div>
-    <div class="attendance-toggle">
-        {% if this.isOpen == false %}
-            <button class="toggle-btn disabled" disabled>Inscription fermé</button>
-        {% elseif this.full %}
-            <button class="toggle-btn disabled" disabled>Créneau complet</button>
-        {% else %}
-            <button class="toggle-btn">Je viens</button>
-            <button class="toggle-btn">Je ne viens pas</button>
+    {% if this.isCancelled %}
+        <div class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Annulé: {{ this.cancelReason }}</div>
+    {% else %}
+        <div class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Places: {{ this.slotCapacity }}</div>
+    {% endif %}
+    {% if not this.isCancelled %}
+        <div class="flex gap-2.5 mt-2.5">
+            {% if this.userCanRegister(app.user) %}
+                {% if this.checkUserIsRegistered(app.user) %}
+                    {% block unregisterButton %}
+                        <a class="button" href="{{ path('app_unregister_user', {
+                            'slotInstance': this.id,
+                            'user': app.user.id,
+                            'weekNumber': this.weekNumber
+                        }) }}">
+                            Je ne viens pas
+                        </a>
+                    {% endblock %}
+                {% else %}
+                    {% block registerButton %}
+                        <a class="button" href="{{ path('app_register_user', {
+                            'slotInstance': this.id,
+                            'user': app.user.id,
+                            'weekNumber': this.weekNumber
+                        }) }}">
+                            Je viens
+                        </a>
+                    {% endblock %}
+                {% endif %}
+            {% else %}
+                {% if this.isFull %}
+                    <button class="button disabled" disabled>
+                        Inscription fermé
+                    </button>
+                {% elseif not this.checkUserLevel(app.user.level) %}
+                    <button class="button disabled" disabled>
+                        Inscription impossible : niveau {{ this.minLevel }} requis
+                    </button>
+                {% elseif this.requiresEquipment and not app.user.equipment %}
+                    <button class="button disabled" disabled>
+                        Inscription impossible : matériel nécessaire
+                    </button>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="flex flex-wrap gap-1 mt-2.5">
+        {% if not this.isCancelled %}
+            {% for participant in this.participants %}
+                {# @var participant App\Entity\User #}
+                {% if app.user.nickname == participant.nickname %}
+                    <div class="badge neutral">{{ participant.nickname }}</div>
+                {% else %}
+                    <div class="badge blue">{{ participant.nickname }}</div>
+                {% endif %}
+            {% endfor %}
         {% endif %}
-    </div>
-    <div class="participants-list">
-        {% for participant in this.participants %}
-            {# @var participant App\Entity\User #}
-            <div class="participant">{{ participant.nickname }}</div>
-        {% endfor %}
     </div>
 </div>

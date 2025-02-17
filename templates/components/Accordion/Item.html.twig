@@ -1,0 +1,27 @@
+<div class="border-b last:border-b-0" {{ attributes }}>
+    <h2 class="mb-0">
+        <button
+            class="group relative flex w-full items-center rounded-none border-0 py-4 px-5 text-left transition"
+            data-action="accordion#toggle"
+            data-accordion-target="button"
+            aria-expanded="false"
+            data-item-id="{{ this.id }}"
+        >
+            {{ this.title }}
+            <span class="ml-auto transition-transform duration-200 group-aria-expanded:rotate-180">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </span>
+        </button>
+    </h2>
+    <div
+        class="hidden overflow-hidden transition-[height] duration-300 ease-in-out"
+        data-accordion-target="content"
+        data-item-id="{{ this.id }}"
+    >
+        <div class="p-5">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>

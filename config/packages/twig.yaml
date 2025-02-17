@@ -1,6 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
-
+    globals:
+        club_name: '%env(CLUB_NAME)%'
 when@test:
     twig:
         strict_variables: true

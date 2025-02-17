@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PlanningController!{% endblock %}
+{% block title %}Planning{% endblock %}
 
 {% block body %}
     <twig:Header />
 
-    <twig:Planning />
+    <twig:Planning weekNumber="{{ weekNumber }}"/>
 {% endblock %}

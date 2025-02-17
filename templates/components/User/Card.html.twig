@@ -1,9 +1,9 @@
-<twig:Card>
-    <div class="user-info">
-        <div class="user-avatar">NB</div>
+<div class="card-primary" {{ attributes }}>
+    <div class="flex flex-row items-center gap-5">
+        <div class="avatar">{{ app.user.initials }}</div>
         <div>
-            <h2>Nicolas B.</h2>
-            <p>Promo: 2024 • Niveau: Débutant • Groupe: Mercredi 19h </p>
+            <h2>{{ app.user.nickname }}</h2>
+            <p class="dark:text-white">Niveau : {{ app.user.level }}</p>
         </div>
     </div>
-</twig:Card>
+</div>
