@@ -12,7 +12,7 @@
         <div class="card-primary">
             <form class="flex flex-col items-center" action="{{ path('app_login') }}" method="POST" data-turbo="false">
                 <input type="email" name="email" placeholder="Email" class="mb-4 w-96">
-                <button type="submit" class="btn">Recevoir un lien magique</button>
+                <button type="submit" class="button">Recevoir un lien magique</button>
             </form>
         </div>
         {% for message in app.flashes('error') %}
