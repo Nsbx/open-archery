@@ -38,7 +38,7 @@ final class Slot
         switch (true) {
             case $this->isFull():
                 return 'full';
-            case str_contains($this->type, 'Libre'):
+            case !str_contains($this->type, 'Cours'):
                 return 'special';
             case $this->isCancelled:
                 return 'cancelled';

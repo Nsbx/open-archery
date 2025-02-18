@@ -128,6 +128,7 @@ input {
         p-4
         mb-4
         border
+        text-center
     ;
 }
 
@@ -141,9 +142,17 @@ input {
 
 .alert.error {
     @apply
-    bg-red-200 dark:bg-red-700
-    text-red-900 dark:text-red-50
-    border-red-200 dark:border-red-700
+        bg-red-200 dark:bg-red-700
+        text-red-900 dark:text-red-50
+        border-red-200 dark:border-red-700
+    ;
+}
+
+.alert.info {
+    @apply
+        bg-cyan-200 dark:bg-cyan-700
+        text-cyan-900 dark:text-cyan-50
+        border-cyan-200 dark:border-cyan-700
     ;
 }
 

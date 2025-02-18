@@ -10,32 +10,38 @@
             </div>
         </div>
         <div class="flex content-center gap-5 mb-5 flex-col xl:flex-row">
-            {% for day, slots in slotsGroupedByDay %}
-                <twig:Planning:Day date="{{ date(day) }}">
-                    {% for slot in slots %}
-                        {# @var slot \App\Entity\SlotInstance #}
-                        {% set startTime = slot.startDate|date('H:i') %}
-                        {% set endTime = slot.endDate|date('H:i') %}
-                        <twig:Planning:Slot
-                            id="{{ slot.id }}"
-                            type="{{ slot.type }}"
-                            time="{{ startTime }} - {{ endTime}}"
-                            participants="{{ slot.registrations }}"
-                            maxCapacity="{{ slot.maxCapacity }}"
-                            allowRegistration="{{ slot.allowRegistration }}"
-                            requiresEquipment="{{ slot.requiresEquipment }}"
-                            minLevel="{{ slot.minLevel }}"
-                            maxLevel="{{ slot.maxLevel }}"
-                            isCancelled="{{ slot.isCancelled }}"
-                            cancelReason="{{ slot.cancelReason }}"
-                            weekNumber="{{ weekNumber }}"
-                        />
-                    {% endfor %}
-                </twig:Planning:Day>
-            {% endfor %}
+            {% if slotsGroupedByDay is not empty %}
+                {% for day, slots in slotsGroupedByDay %}
+                    <twig:Planning:Day date="{{ date(day) }}">
+                        {% for slot in slots %}
+                            {# @var slot \App\Entity\SlotInstance #}
+                            {% set startTime = slot.startDate|date('H:i') %}
+                            {% set endTime = slot.endDate|date('H:i') %}
+                            <twig:Planning:Slot
+                                id="{{ slot.id }}"
+                                type="{{ slot.type }}"
+                                time="{{ startTime }} - {{ endTime }}"
+                                participants="{{ slot.registrations }}"
+                                maxCapacity="{{ slot.maxCapacity }}"
+                                allowRegistration="{{ slot.allowRegistration }}"
+                                requiresEquipment="{{ slot.requiresEquipment }}"
+                                minLevel="{{ slot.minLevel }}"
+                                maxLevel="{{ slot.maxLevel }}"
+                                isCancelled="{{ slot.isCancelled }}"
+                                cancelReason="{{ slot.cancelReason }}"
+                                weekNumber="{{ weekNumber }}"
+                            />
+                        {% endfor %}
+                    </twig:Planning:Day>
+                {% endfor %}
+            {% else %}
+                <div class="w-full flex justify-center">
+                    <h1>Aucun créneaux disponible pour cette semaine.</h1>
+                </div>
+            {% endif %}
         </div>
         <div>
-            <twig:Planning:Legend />
+            <twig:Planning:Legend/>
         </div>
     </div>
 </div>

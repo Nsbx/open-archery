@@ -6,7 +6,9 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_NICKNAME', fields: ['nickname'])]
@@ -47,14 +49,18 @@ class User implements UserInterface
     #[ORM\ManyToMany(targetEntity: SlotInstance::class, mappedBy: 'registrations')]
     private Collection $slotInstances;
 
-    // Not used but needed for passwordless system
+    // Not used but needed for passwordless interface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $password = null;
+
+    #[ORM\Column(type: UuidType::NAME, nullable: true)]
+    private ?Uuid $secret = null;
 
     public function __construct()
     {
         $this->recurringSlots = new ArrayCollection();
-        $this->slotInstances = new ArrayCollection();
+        $this->slotInstances  = new ArrayCollection();
+        $this->secret         = Uuid::v4();
     }
 
     public function getId(): ?int
@@ -78,9 +84,9 @@ class User implements UserInterface
     }
 
     /**
+     * @return list<string>
      * @see UserInterface
      *
-     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -214,7 +220,7 @@ class User implements UserInterface
 
     public function getInitials(): string
     {
-        $initials = '';
+        $initials  = '';
         $nameParts = explode(' ', $this->nickname);
         foreach ($nameParts as $namePart) {
             $initials .= $namePart[0];
@@ -225,5 +231,17 @@ class User implements UserInterface
     public function __toString(): string
     {
         return $this->nickname;
+    }
+
+    public function getSecret(): ?Uuid
+    {
+        return $this->secret;
+    }
+
+    public function setSecret(?Uuid $secret): static
+    {
+        $this->secret = $secret;
+
+        return $this;
     }
 }

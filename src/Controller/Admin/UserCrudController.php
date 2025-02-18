@@ -9,7 +9,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UserCrudController extends AbstractCrudController
@@ -31,7 +30,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('nickname'),
             IntegerField::new('level'),
             BooleanField::new('hasEquipment'),
-            AssociationField::new('recurringSlots')->hideOnForm(),
+            AssociationField::new('recurringSlots')->hideOnForm()
         ];
     }
 }

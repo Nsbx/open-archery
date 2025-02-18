@@ -58,7 +58,7 @@
             {% else %}
                 {% if this.isFull %}
                     <button class="button disabled" disabled>
-                        Inscription fermé
+                        Inscription impossible : Plus de places disponibles
                     </button>
                 {% elseif not this.checkUserLevel(app.user.level) %}
                     <button class="button disabled" disabled>
@@ -67,6 +67,10 @@
                 {% elseif this.requiresEquipment and not app.user.equipment %}
                     <button class="button disabled" disabled>
                         Inscription impossible : matériel nécessaire
+                    </button>
+                {% else %}
+                    <button class="button disabled" disabled>
+                        Inscription fermé
                     </button>
                 {% endif %}
             {% endif %}

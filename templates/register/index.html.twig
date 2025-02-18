@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block bodyClass %}bg-primary h-screen{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col h-full items-center justify-center">
+        <div class="flex flex-col items-center mb-8">
+            <h1 class="text-4xl">{{ club_name }}</h1>
+            <p class="text-xl text-black dark:text-zinc-200">Bienvenue sur la page d'inscription</p>
+        </div>
+        <div class="alert info">
+            <p>Vous allez vous inscrire sous le nom <strong>{{ userNickname }}</strong></p>
+            <p>si c'est une erreur, veuillez contacter votre administrateur</p>
+        </div>
+        <div class="card-primary">
+            <form class="flex flex-col items-center" action="{{ path('app_register', {'userNickname': userNickname, 'secret': secret}) }}" method="POST" data-turbo="false">
+                <input type="email" name="email" placeholder="Email" class="mb-4 w-96">
+                <button type="submit" class="button">Finaliser l'inscription</button>
+            </form>
+        </div>
+        {% for message in app.flashes('error') %}
+            <div class="alert error">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('success') %}
+            <div class="alert success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
