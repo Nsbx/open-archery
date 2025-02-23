@@ -16,6 +16,12 @@ Open-Archery est un projet open source visant à aider les clubs de tir à l'arc
 ## Fonctionnalités à venir
 - Historique des sessions et statistiques.
 
+## Soutenir le projet
+Open-Archery est développé sur mon temps libre et évolue au fil de mes disponibilités.
+Si le projet vous est utile et que vous souhaitez soutenir son développement, vous pouvez faire un don.
+Avec suffisamment de soutien, je pourrais y consacrer plus de temps et accélérer son évolution.
+À terme, cela pourrait permettre de proposer une version hébergée et clé en main pour les clubs souhaitant une solution prête à l'emploi.
+
 ## Installer le projet
 ### Pré-requis
 - Git
@@ -24,9 +30,11 @@ Open-Archery est un projet open source visant à aider les clubs de tir à l'arc
 - Symfony CLI 5.10
 
 ### Commandes
-> composer install
-> symfony server:start
-> symfony console tailwind:build
-> symfony console asset-map:compile
+```
+composer install
+symfony server:start
+symfony console tailwind:build
+symfony console asset-map:compile
+```
 
 Ne pas oublier de modifier les variables d'environnements
