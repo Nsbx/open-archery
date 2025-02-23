@@ -1,6 +1,10 @@
 # Open-Archery
 Open-Archery est un projet open source visant à aider les clubs de tir à l'arc. (Dans un premier temps mon propre club)
 
+## Preview
+![image](https://github.com/user-attachments/assets/1ac14c24-0c85-4de1-91e9-b918ba6d6ca3)
+
+
 ## Objectifs du projet
 - Accessibilité : Fournir un outil simple et efficace pour les clubs.
 - Respect de la vie privée : Open-Archery met un point d'honneur à protéger les données personnelles des utilisateurs et à garantir une utilisation sécurisée du service.
